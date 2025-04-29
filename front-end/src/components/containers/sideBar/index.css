@@ -1,0 +1,6 @@
+.active {
+  background-color: #2563eb; /* Tailwind blue-600 */
+  color: white;
+  box-shadow: 0 4px 6px rgba(59, 130, 246, 0.5); /* blue-600 shadow */
+  transition: 400ms ease-in-out;
+}

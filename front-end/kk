@@ -1,0 +1,19 @@
+import Breadcrumb from "../../components/common/breadcrumbs";
+
+const Profil = () => {
+  return (
+    <div className="flex flex-col p-4 gap-2">
+      <div className="flex flex-col gap-2 ">
+        <div>
+          <h1 className="font-extrabold text-2xl">Profil</h1>
+        </div>
+        <Breadcrumb links={[{ value: "Profil", to: "/" }]} />
+      </div>
+      <div className="flex flex-col gap-7">
+        <div className="flex"></div>
+      </div>
+    </div>
+  );
+};
+
+export default Profil;

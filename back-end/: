@@ -1,0 +1,62 @@
+<?php
+
+namespace App\Http\Controllers\Api;
+
+use App\Http\Traits\Api\ApiResponse;
+use App\Interfaces\StorageServiceI;
+use App\Models\Product;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Validator;
+
+class ProductController
+{
+    use ApiResponse;
+
+    public function __construct(private StorageServiceI $storageService) {}
+
+    public function create(Request $request)
+    {
+        $validator = Validator::make([
+            "name" => $request->name,
+            "descrition" => $request->descrition,
+            "category_id" => $request->category_id,
+            "brand" => $request->brand,
+            "regular_price" => $request->regular_price,
+            "sales_price" => $request->sales_price,
+
+        ], [
+            "name" =>  "required|string|max:55|min:6",
+            "description" =>  "required|string|max:255|min:10",
+            "category_id" =>  "required|string|",
+            "brand" => "required|string|min:3|max:60",
+            "regular_price" => "required|integer|min:0",
+            "sales_price" => "required|integer|min:0",
+            "images.*" => 'image|mimes:jpeg,png,jpg,gif|max:2048'
+        ]);
+
+        // if ($validator->fails()) {
+        //     return $this->errorResponse(
+        //         "Product validation failed",
+        //         400,
+        //         $validator->errors()
+        //     );
+        // }
+
+        // $newProduct = Product::create($validator);
+
+        return $this->successResponse("product info ", 200, $validator->customValues);
+        if ($request->hasFile("images")) {
+            $fileNames = [];
+            foreach ($request->file("images") as $file) {
+                array_push($fileNames, $file->getClientOriginalName());
+            }
+        }
+    }
+
+    public function test()
+    {
+        $user = Auth::user();
+        return $this->successResponse("user ", 200, $user);
+    }
+}
