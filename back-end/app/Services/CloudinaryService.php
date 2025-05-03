@@ -6,6 +6,7 @@ use App\Interfaces\StorageServiceI;
 use Cloudinary\Api\Upload\UploadApi;
 use Illuminate\Http\UploadedFile;
 use Cloudinary\Cloudinary;
+use Cloudinary\Configuration\Configuration;
 
 class CloudinaryService implements StorageServiceI
 {
@@ -14,31 +15,20 @@ class CloudinaryService implements StorageServiceI
 
     public function __construct()
     {
-        $this->cloudinary = new Cloudinary([
-            "cloud" => [
-                "cloud_name" => config("cloudinary.cloud_name"),
-                "api_key" => config("cloudinary.api_key"),
-                "secret_key" => config("cloudinary.secret_key"),
-            ]
-        ]);
+        $configuration = new Configuration(config("cloudinary.cloud_url"));
+        $this->cloudinary = new Cloudinary($configuration);
 
-        $this->uploadApi = new UploadApi();
+        $this->uploadApi = new UploadApi($configuration);
     }
 
 
-    public function upload(UploadedFile $file, string $folder = "products"): array
+    public function upload(UploadedFile $file, string $folder = "totib")
     {
-        $result =     $this->uploadApi->upload($file->getRealPath(), [
-            "use_filename" => true,
-            "unique_filename" => false,
-            "resource_type" => "image",
-            "type" => "authenticated"
-        ]);
+        // $result =     $this->uploadApi->upload($file->getRealPath(), $folder);
 
-        return [
-            "url" => $result["url"],
-            "public_id" => $result["public_id"]
-        ];
+$result = $this->uploadApi->upload($file->getRealPath());
+
+        return $result;
     }
 
     public function delete(string $public_id): void

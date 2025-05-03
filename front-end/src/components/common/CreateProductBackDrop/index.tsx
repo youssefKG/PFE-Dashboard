@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { FC, useState } from "react";
 import { Form, Formik } from "formik";
 import { Backdrop, LinearProgress } from "@mui/material";
 import { CreateProductI, ProductImageI } from "../../../types/product";
@@ -18,17 +18,18 @@ interface CreateProductBackDropPropsI {
 const createProductInitialValues: CreateProductI = {
   name: "",
   brand: "",
-  category: "",
+  category_id: "",
   images: [],
   description: "",
   regularPrice: 0,
   salesPrice: 0,
+  quantity: 0,
 };
 
-const CreateProductBackDrop = ({
+const CreateProductBackDrop: FC<CreateProductBackDropPropsI> = ({
   isOpen,
   handleClose,
-}: CreateProductBackDropPropsI) => {
+}) => {
   const [images, setImages] = useState<ProductImageI[]>([]);
   const [description, setDescription] = useState<string>("");
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -55,50 +56,23 @@ const CreateProductBackDrop = ({
     });
   };
 
-  const createProduct = async (values: CreateProductI) => {
-    try {
-      const formData = new FormData();
-      formData.append("name", values.name);
-      formData.append("description", description);
-      formData.append("regular_price", values.regularPrice.toString());
-      formData.append("sales_price", values.salesPrice.toString());
-      formData.append("category", values.category);
-      formData.append("brand", values.brand);
-
-      images.forEach((img: ProductImageI) => {
-        formData.append("images[]", img.file);
-      });
-
-      console.log("form data", formData.get("images[]"));
-      const response = await api.post("/product", formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      });
-
-      console.log(response);
-    } catch (error) {
-      console.log(error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
+  const handleCreateProduct = async (values: CreateProductI) => {};
 
   return (
     <Backdrop
       open={isOpen}
-      className="relative flex overflow-x-scroll
+      className="relative z-40 flex overflow-x-scroll
     gap-2"
     >
       <Formik
         initialValues={createProductInitialValues}
-        onSubmit={createProduct}
+        onSubmit={handleCreateProduct}
         validationSchema={createProductSchema}
       >
         {({ errors, values, touched, handleChange, handleBlur }) => {
           console.log(errors);
           return (
-            <Form className="bg-white py-4 flex flex-col md:flex-nowrap md:mt-40 mt-[400px]  md:ml-80 justify-center px-5  gap-5 relative m-5 rounded-xl ">
+            <Form className="bg-white py-4 flex flex-col md:flex-nowrap justify-center px-5  gap-5 relative m-5 rounded-xl ">
               <div className="flex flex-wrap md:flex-nowrap  justify-center px-5 gap-5 relative ">
                 <div className="flex flex-col gap-6 p-4 relative w-full">
                   <div className="flex flex-col gap-2 w-full">
@@ -205,21 +179,21 @@ const CreateProductBackDrop = ({
                   onDrop={onDrop}
                 />
               </div>
-              <div className="flex gap-2 justify-end self-end">
-                <Button
-                  handleClick={handleClose}
-                  className="bg-red-600 text-sm p-1 px-4 hover:opacity-75
-          transition-all text-white"
+              <div className="flex gap-2 justify-end">
+                <button
+                  onClick={handleClose}
+                  type="button"
+                  className="px-4 p-1 rounded-xl  text-sm text-black border border-gray-400
+          font-medium shadow hover:opacity-70 transition-all cursor-pointer"
                 >
-                  <p className="text-xs font-semibold tracking-wider">Cancel</p>
-                </Button>
-                <Button
-                  isLoading={isLoading}
-                  className="bg-blue-500 hover:opacity-75 text-sm p-1 px-4
-          transition-all text-white"
+                  Discart
+                </button>
+                <button
+                  className="px-4 p-1 rounded-xl bg-black text-sm text-white
+          font-medium shadow hover:opacity-70 transition-all cursor-pointer"
                 >
-                  <p className="text-xs font-semibold tracking-wider">Create</p>
-                </Button>
+                  Create Product
+                </button>
               </div>
             </Form>
           );
@@ -264,10 +238,12 @@ const CreateProductImages = ({
 }: CreateProductImagesPropsI) => {
   return (
     <div className="flex flex-col gap-4 w-full">
-      <img
-        className="w-full h-60 shadow-sm rounded-xl"
-        src={images.length > 0 ? images[0].url : ""}
-      />
+      {images.length > 0 && (
+        <img
+          className="w-full h-60 shadow-sm rounded-xl"
+          src={images.length > 0 ? images[0].url : ""}
+        />
+      )}
       <ImagesDropZone onDrop={onDrop} />
       <ListImages images={images} isLoading={isLoading} />
     </div>

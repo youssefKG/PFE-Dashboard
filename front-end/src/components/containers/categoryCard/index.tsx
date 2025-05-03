@@ -9,7 +9,7 @@ import { Divider } from "@mui/material";
 import { Link } from "react-router-dom";
 
 interface CategoryCardPropsI {
-  id: number;
+  id: string;
   name: string;
   description: string;
   imgUrl: string;
@@ -29,7 +29,7 @@ const CategoryCard = ({
         <h1 className="text-gray-700 font-bold">{name}</h1>
         <CategoryCardDetailPopover />
       </div>
-      <img src={imgUrl} className="rounded-xl" />
+      <img src={imgUrl} className="rounded-xl h-52" />
       <p className="text-gray-600 text-sm">{description}</p>
     </Link>
   );

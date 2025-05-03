@@ -1,12 +1,9 @@
-import ProductCard from "../../common/ProductCard";
+import ProductCard from "../../common/ProductCard/index";
 import { productsData } from "../../../utils";
 
 const ProductCardsList = () => {
   return (
-    <div
-      className="p-4 mx-auto grid grid-cols-1 w-full sm:grid-cols-2 dark:bg-neutral-800 lg:grid-cols-3
-      xl:grid-cols-4 gap-4 rounded-xl flex-wrap  bg-white shadow mt-16"
-    >
+    <div className="p-4 flex mx-auto  w-full gap-4 dark:bg-neutral-800 lg:grid-cols-3 xl:grid-cols-4 rounded-xl flex-wrap bg-white shadow">
       {productsData.map((product) => {
         return (
           <ProductCard

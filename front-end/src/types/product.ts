@@ -1,4 +1,4 @@
-export interface Product {
+export interface ProductI {
   id: string;
   name: string;
   description: string;
@@ -17,10 +17,11 @@ export interface CreateProductI {
   name: string;
   description: string;
   brand: string;
-  images: ProductImageI[];
+  images: File[];
   regularPrice: number;
   salesPrice: number;
-  category: string;
+  quantity: number;
+  category_id: string;
 }
 
 export interface ProductImageI {

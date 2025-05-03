@@ -3,7 +3,7 @@ import { ClipLoader } from "react-spinners";
 
 interface IButtonPorps {
   children?: ReactNode;
-  handleClick?: <T>(params: T) => Promise<void>;
+  handleClick?: () => unknown;
   isLoading?: boolean;
   className?: string;
   size?: number;

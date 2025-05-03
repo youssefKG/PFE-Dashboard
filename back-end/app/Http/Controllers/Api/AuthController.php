@@ -33,11 +33,12 @@ class AuthController
 
 
         $user = User::where("email", $credentials["email"])->first();
+
         if (!$user || !Hash::check(
             $credentials["password"],
             $user["password"]
         )) {
-            $this->errorResponse("Email or password incorrect", 400, null);
+            return $this->errorResponse("Email or password incorrect", 400, null);
         };
 
         // Start a new session
