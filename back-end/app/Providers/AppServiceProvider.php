@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Http\Controllers\Api\CategoryController;
 use App\Http\Controllers\Api\ProductController;
 use App\Interfaces\StorageServiceI;
 use App\Services\CloudinaryService;
@@ -20,6 +21,9 @@ class AppServiceProvider extends ServiceProvider
 
         $this->app->bind(ProductController::class, function ($app) {
             return new ProductController($app->make(StorageServiceI::class));
+        });
+        $this->app->bind(CategoryController::class, function ($app) {
+            return new CategoryController($app->make(StorageServiceI::class));
         });
     }
 

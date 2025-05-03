@@ -9,7 +9,9 @@ import ProtectedRoute from "./protectedRoutes";
 import GuestRoute from "./guestRoute";
 import Profil from "../pages/profil";
 import Category from "../pages/category";
-
+import ProductDetail from "../pages/productDetail";
+import Order from "../pages/orders";
+import Consumers from "../pages/consumers";
 const routes = createBrowserRouter([
   {
     path: "/",
@@ -27,6 +29,9 @@ const routes = createBrowserRouter([
               { path: "/products", Component: Products },
               { path: "/profil", Component: Profil },
               { path: "/category", Component: Category },
+              { path: "/product-detail", Component: ProductDetail },
+              { path: "/consumers", Component: Consumers },
+              { path: "/orders", Component: Order },
             ],
           },
         ],

@@ -32,7 +32,7 @@ const ProductCard: FC<IProductCardProps> = ({
   return (
     <Link
       to={`/${id}`}
-      className="flex w-full transition-colors lg:max-w-xs   flex-col gap-3 p-3 border border-gray-100 dark:bg-gray-800 dark:text-white shadow-sm  rounded-md "
+      className="flex w-full transition-colors max-w-xs   flex-col gap-3 p-3 border border-gray-100 dark:bg-gray-800 dark:text-white shadow-sm  rounded-md "
     >
       <div className="flex gap-4 justify-between">
         <div className="flex gap-4">

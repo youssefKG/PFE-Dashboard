@@ -60,3 +60,15 @@ export const createProductSchema = Yup.object({
       "Sales price must be less than or equal to regular price",
     ),
 });
+
+export const categoryValidation = Yup.object({
+  name: Yup.string()
+    .min(4, "Name must be at least 8 characters")
+    .max(255, "Name must be less than 255 characters")
+    .required("Name is required"),
+
+  description: Yup.string()
+    .min(4, "Description must be at least 8 characters")
+    .max(255, "Description must be less than 255 characters")
+    .required("Description is required"),
+});

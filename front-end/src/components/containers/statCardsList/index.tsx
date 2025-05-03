@@ -1,6 +1,8 @@
 import { Area, AreaChart } from "recharts";
 import { ArrowTrendingUpIcon } from "@heroicons/react/24/outline";
 import { CreditCardIcon } from "@heroicons/react/24/outline";
+import { Card } from "@mui/material";
+import ProductCardsList from "../productCardsList";
 
 const inclindeData = [{ pv: 0 }, { pv: 598 }, { pv: 898 }, { pv: 1698 }];
 
@@ -139,8 +141,4 @@ const StatCardsList = () => {
   );
 };
 
-const Stat = () => {
-  return <div>Hello</div>;
-};
-
-export default Stat;
+export default ProductCardsList;

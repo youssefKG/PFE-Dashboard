@@ -16,11 +16,12 @@ class ProductImage extends Model
      *
      * @var array<int, string>
      */
+    protected $table = "product_images";
     protected $fillable = [
         'product_id',
-        'image_path',
+        'public_id',
+        'image_url',
         'is_primary',
-        'sort_order',
     ];
 
     /**
@@ -40,4 +41,4 @@ class ProductImage extends Model
     {
         return $this->belongsTo(Product::class);
     }
-} 
+}
