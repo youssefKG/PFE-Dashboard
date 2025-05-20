@@ -39,38 +39,11 @@ api.interceptors.request.use(
 api.interceptors.response.use(
   (response: AxiosResponse) => response.data,
   async (error: AxiosError<ErrorResponse>) => {
-    const originalRequest = error.config;
-
-    if (
-      error.response?.status === 401 &&
-      originalRequest &&
-      !originalRequest._retry
-    ) {
-      originalRequest._retry = true;
-
-      try {
-        const refreshToken = localStorage.getItem("refresh_token");
-        if (!refreshToken) {
-          throw new Error("No refresh token available");
-        }
-
-        const response = await axios.post("/auth/refresh", {
-          refresh_token: refreshToken,
-        });
-        const { token } = response.data;
-
-        localStorage.setItem("token", token);
-        if (originalRequest.headers) {
-          originalRequest.headers.Authorization = `Bearer ${token}`;
-        }
-
-        return api(originalRequest);
-      } catch (refreshError) {
-        localStorage.removeItem("user_totib");
-        localStorage.removeItem("user_totib");
-        window.location.href = "/login";
-        return Promise.reject(refreshError);
-      }
+    if (error.response?.status === 401) {
+      console.log("remove item");
+      localStorage.removeItem("user_totib");
+      localStorage.removeItem("user_totib");
+      // window.location.href = "/login";
     }
 
     return Promise.reject(error);

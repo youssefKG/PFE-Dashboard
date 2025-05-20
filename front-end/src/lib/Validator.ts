@@ -38,13 +38,10 @@ export const createProductSchema = Yup.object({
     .required("Product name is required")
     .min(3, "Product name must be at least 3 characters"),
 
-  category: Yup.string()
-    .required("Category is required")
-    .min(2, "Category must be at least 2 characters"),
-
-  brand: Yup.string()
-    .required("Brand is required")
-    .min(2, "Brand must be at least 2 characters"),
+  quantity: Yup.number()
+    .typeError("Regular price must be a number")
+    .required("Regular price is required")
+    .positive("Regular price must be positive"),
 
   regularPrice: Yup.number()
     .typeError("Regular price must be a number")
