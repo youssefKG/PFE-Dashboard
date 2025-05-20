@@ -1,27 +1,27 @@
+import { CategoryI } from "./category";
+
 export interface ProductI {
   id: string;
   name: string;
   description: string;
-  price: number;
-  stock: number;
-  category_id: string;
-  brand_id: string;
-  status: "active" | "inactive";
-  images?: ProductImage[];
-  reviews?: ProductReview[];
-  created_at?: string;
-  updated_at?: string;
+  sales: number;
+  regularPrice: number;
+  salesPrice: number;
+  quantity: number;
+  images: ProductImage[];
+  createdAt: Date;
+  updatedAt: Date;
+  category: CategoryI;
 }
 
 export interface CreateProductI {
   name: string;
   description: string;
-  brand: string;
   images: File[];
   regularPrice: number;
   salesPrice: number;
   quantity: number;
-  category_id: string;
+  categoryId: string;
 }
 
 export interface ProductImageI {
@@ -34,8 +34,7 @@ export interface ProductImageI {
 
 export interface ProductImage {
   id: string;
-  product_id: string;
-  image_path: string;
+  imageUrl: string;
   is_primary: boolean;
   sort_order: number;
 }

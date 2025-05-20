@@ -1,13 +1,13 @@
-import { FC, useState } from "react";
-import { Form, Formik } from "formik";
+import { ChangeEvent, FC, useEffect, useRef, useState } from "react";
+import { Form, Formik, FormikProps } from "formik";
 import { Backdrop, LinearProgress } from "@mui/material";
-import { CreateProductI, ProductImageI } from "../../../types/product";
-import Button from "../button";
-import ReactQuill from "react-quill";
+import api from "../../../api";
+import { CreateProductI } from "../../../types/product";
 import { createProductSchema } from "../../../lib/Validator";
 import ImagesDropZone from "../../containers/ImagesDropZone";
-import api from "../../../api";
+import Response from "../../../interfaces/response";
 import "react-quill/dist/quill.snow.css";
+import { CategoryI } from "../../../types/category";
 
 interface CreateProductBackDropPropsI {
   isOpen: boolean;
@@ -15,24 +15,29 @@ interface CreateProductBackDropPropsI {
   createProduct: (values: CreateProductI) => Promise<void>;
 }
 
-const createProductInitialValues: CreateProductI = {
-  name: "",
-  brand: "",
-  category_id: "",
-  images: [],
-  description: "",
-  regularPrice: 0,
-  salesPrice: 0,
+type ProductImageType = {
+  url: string;
+  name: string;
+};
+
+const createProductInitialValues = {
+  name: "the name of product",
+  description: "description of the product",
+  regularPrice: 1000,
+  salesPrice: 10,
   quantity: 0,
 };
 
 const CreateProductBackDrop: FC<CreateProductBackDropPropsI> = ({
   isOpen,
   handleClose,
+  createProduct,
 }) => {
-  const [images, setImages] = useState<ProductImageI[]>([]);
-  const [description, setDescription] = useState<string>("");
-  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [imagesUrl, setImagesUrl] = useState<ProductImageType[]>([]);
+  const [images, setImages] = useState<File[]>([]);
+  const [categories, setCategories] = useState<CategoryI[]>([]);
+  const [selectedCategoryId, setSelectedCategoryId] = useState<string>("");
+  const formRef = useRef<FormikProps<unknown>>(null);
 
   const onDrop = (imgFiles: File[]) => {
     const reader = new FileReader();
@@ -40,23 +45,46 @@ const CreateProductBackDrop: FC<CreateProductBackDropPropsI> = ({
       console.log(imgFiles);
       reader.onload = (e) => {
         if (e.target)
-          setImages([
-            ...images,
-            {
-              name: img.name,
-              id: images.length,
-              url: e.target.result as string,
-              file: img,
-              isLoading: false,
-            },
+          setImagesUrl((prev) => [
+            ...prev,
+            { url: e.target?.result as string, name: img.name },
           ]);
+
+        setImages((prev) => [...prev, img]);
       };
 
       reader.readAsDataURL(img);
     });
   };
 
-  const handleCreateProduct = async (values: CreateProductI) => {};
+  const handleCreateProduct = async (values: unknown) => {
+    await createProduct({
+      ...(values as CreateProductI),
+      images,
+      categoryId: selectedCategoryId,
+    });
+  };
+
+  const handleChangeCateogory = (e: ChangeEvent<HTMLSelectElement>) => {
+    setSelectedCategoryId(e.target.value);
+  };
+
+  const clearCreateProductDataForm = () => {
+    setSelectedCategoryId("");
+    formRef.current?.resetForm();
+    handleClose();
+  };
+
+  useEffect(() => {
+    const fetchCategories = async () => {
+      const response = await api.get<Response<CategoryI[]>>("/categories");
+      setCategories(response.data);
+    };
+    fetchCategories();
+  }, []);
+  useEffect(() => {
+    console.log(images);
+  }, [images]);
 
   return (
     <Backdrop
@@ -65,12 +93,12 @@ const CreateProductBackDrop: FC<CreateProductBackDropPropsI> = ({
     gap-2"
     >
       <Formik
+        innerRef={formRef}
         initialValues={createProductInitialValues}
         onSubmit={handleCreateProduct}
         validationSchema={createProductSchema}
       >
         {({ errors, values, touched, handleChange, handleBlur }) => {
-          console.log(errors);
           return (
             <Form className="bg-white py-4 flex flex-col md:flex-nowrap justify-center px-5  gap-5 relative m-5 rounded-xl ">
               <div className="flex flex-wrap md:flex-nowrap  justify-center px-5 gap-5 relative ">
@@ -94,28 +122,32 @@ const CreateProductBackDrop: FC<CreateProductBackDropPropsI> = ({
                   </div>
                   <div className="flex flex-col gap-2">
                     <h1 className="font-sans text-sm">Description</h1>
-                    <ReactQuill
-                      theme="snow"
-                      placeholder="Type description here"
-                      value={description}
-                      onChange={setDescription}
-                    />
-                  </div>
-                  <div className="flex sm:mt-14 flex-col gap-2">
-                    <h1 className="text-sm">Category</h1>
                     <div className="border-gray-400 border p-1 rounded-md">
-                      <input
-                        className="w-full rounded-e border-none text-gray-900 text-xs
-            outline-none focus:border-none focus:outline-none"
-                        placeholder="Type Category here"
-                        name="category"
-                        value={values.category}
+                      <textarea
+                        placeholder="Type description here"
+                        value={values.description}
+                        name="description"
+                        className="w-full rounded-e border-none text-gray-900
+                        text-xs outline-none focus:border-none
+                        focus:outline-none"
                         onChange={handleChange}
                       />
                     </div>
-                    {touched.category && errors.category && (
-                      <p className="text-xs text-red-500">{errors.category}</p>
-                    )}
+                  </div>
+                  <div className="flex  flex-col gap-2">
+                    <h1 className="text-sm">Category</h1>
+                    <select
+                      onChange={handleChangeCateogory}
+                      value={selectedCategoryId}
+                      className="border border-gray-400 p-2 text-xs bg-white rounded-md"
+                    >
+                      <option value="">Select Category</option>
+                      {categories.map((cat: CategoryI) => (
+                        <option value={cat.id} key={cat.id}>
+                          <p className="text-xs">{cat.name}</p>
+                        </option>
+                      ))}
+                    </select>
                   </div>
                   <div className="flex flex-col gap-2">
                     <h1 className="text-sm">Brand</h1>
@@ -123,14 +155,18 @@ const CreateProductBackDrop: FC<CreateProductBackDropPropsI> = ({
                       <input
                         className="w-full rounded-e border-none text-gray-900 text-xs
             outline-none focus:border-none focus:outline-none"
-                        name="brand"
-                        value={values.brand}
+                        name="quantity"
+                        type="number"
+                        value={values.quantity}
                         placeholder="Type brand here"
                         onChange={handleChange}
                       />
                     </div>
-                    {touched.brand && errors.brand && (
-                      <p className="text-red-500 text-xs"> {errors.brand} </p>
+                    {touched.quantity && errors.quantity && (
+                      <p className="text-red-500 text-xs">
+                        {" "}
+                        {errors.quantity}{" "}
+                      </p>
                     )}
                   </div>
                   <div className="flex gap-2">
@@ -173,11 +209,7 @@ const CreateProductBackDrop: FC<CreateProductBackDropPropsI> = ({
                     </div>
                   </div>
                 </div>
-                <CreateProductImages
-                  isLoading={isLoading}
-                  images={images}
-                  onDrop={onDrop}
-                />
+                <ProductImages images={imagesUrl} onDrop={onDrop} />
               </div>
               <div className="flex gap-2 justify-end">
                 <button
@@ -189,6 +221,7 @@ const CreateProductBackDrop: FC<CreateProductBackDropPropsI> = ({
                   Discart
                 </button>
                 <button
+                  type="submit"
                   className="px-4 p-1 rounded-xl bg-black text-sm text-white
           font-medium shadow hover:opacity-70 transition-all cursor-pointer"
                 >
@@ -203,49 +236,42 @@ const CreateProductBackDrop: FC<CreateProductBackDropPropsI> = ({
   );
 };
 
-interface ListImagesPropsI {
-  images: ProductImageI[];
-  isLoading: boolean;
+interface CreateProductImagesPropsI {
+  images: ProductImageType[];
+  onDrop: (images: File[]) => void;
 }
-const ListImages = ({ images, isLoading }: ListImagesPropsI) => {
+
+const ProductImages = ({ onDrop, images }: CreateProductImagesPropsI) => {
   return (
-    <div className="flex gap-2 max-h-44 overflow-y-scroll flex-col">
-      {images.map((img: ProductImageI) => (
-        <div key={img.id} className="flex  gap-2  p-2 shadow-sm w-full">
-          <img className="w-10 h-10" src={img.url} />
-          <div className="flex g flex-col w-full gap-2">
-            <p className="text-xs">{img.name}</p>
-            {isLoading && (
-              <LinearProgress color="success" className="w-full " />
-            )}
-          </div>
-        </div>
-      ))}
+    <div className="flex flex-col gap-4 w-full">
+      {images.length > 0 && (
+        <img className="w-full h-60 shadow-sm rounded-xl" src={images[0].url} />
+      )}
+      <ImagesDropZone onDrop={onDrop} />
+      <ListImages images={images} />
     </div>
   );
 };
 
-interface CreateProductImagesPropsI {
-  images: ProductImageI[];
-  isLoading: boolean;
-  onDrop: (images: File[]) => void;
+interface ListImagesPropsI {
+  images: ProductImageType[];
 }
 
-const CreateProductImages = ({
-  onDrop,
-  images,
-  isLoading,
-}: CreateProductImagesPropsI) => {
+const ListImages: FC<ListImagesPropsI> = ({ images }) => {
   return (
-    <div className="flex flex-col gap-4 w-full">
-      {images.length > 0 && (
-        <img
-          className="w-full h-60 shadow-sm rounded-xl"
-          src={images.length > 0 ? images[0].url : ""}
-        />
-      )}
-      <ImagesDropZone onDrop={onDrop} />
-      <ListImages images={images} isLoading={isLoading} />
+    <div className="flex gap-2 max-h-44 overflow-y-scroll flex-col">
+      {images.map((img: ProductImageType, id: number) => (
+        <div
+          key={id}
+          className="flex  gap-2 items-center  p-2 shadow-sm w-full"
+        >
+          <img className="w-10 h-10" src={img.url} />
+          <div className="flex g flex-col w-full gap-2">
+            <p className="text-xs">{img.name}</p>
+            <LinearProgress color="success" className="w-full " />
+          </div>
+        </div>
+      ))}
     </div>
   );
 };

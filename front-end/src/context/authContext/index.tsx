@@ -24,7 +24,7 @@ const AuthContext = createContext<AuthContextI>({} as AuthContextI);
 const AuthContextProvider = ({ children }: AuthContextProviderPropsI) => {
   const { showNotification } = useNotification();
   const navigate = useNavigate();
-  const [user, setUser] = useState<UserType>({} as UserType);
+  const [user, setUser] = useState<UserType | null>({} as UserType);
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const login = async (values: LoginFormDataType) => {
@@ -82,11 +82,11 @@ const AuthContextProvider = ({ children }: AuthContextProviderPropsI) => {
 
   useEffect(() => {
     const user = LocalStorageService.getItem("totib_user");
-    console.log(user);
+    console.log("local", user);
     if (user) {
       setUser(user);
     } else {
-      setUser(null as UserType);
+      setUser(null);
     }
   }, []);
   return (

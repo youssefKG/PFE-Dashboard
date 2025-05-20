@@ -29,7 +29,6 @@ class ProductController
                 "regularPrice" => "required|min:0",
                 "salesPrice" => "required|min:0",
                 "quantity" => "required|integer|min:0",
-                "images.*" => 'image|required|mimes:jpeg,png,jpg,gif'
             ]
         );
 
@@ -39,6 +38,13 @@ class ProductController
                 400,
                 $validator->errors()
             );
+        }
+
+
+
+
+        if (!$request->file("images")) {
+            return  $this->errorResponse("Error: All Fields required", 400, null);
         }
 
 
@@ -53,23 +59,21 @@ class ProductController
 
         $newProduct = Product::create($productData);
 
-        if ($request->hasFile("images")) {
-            foreach ($request->file("images")  as $fileImage) {
-                $image = $this->storageService->upload($fileImage);
-                ProductImage::create([
-                    "product_id" => $newProduct["id"],
-                    "isPrimary" => false,
-                    "public_id" => $image["public_id"],
-                    "image_url" => $image["url"]
-                ]);
-            }
+        foreach ($request->file("images")  as $fileImage) {
+            $image = $this->storageService->upload($fileImage);
+            ProductImage::create([
+                "product_id" => $newProduct["id"],
+                "isPrimary" => false,
+                "public_id" => $image["public_id"],
+                "image_url" => $image["url"]
+            ]);
         }
 
         return $this->successResponse(
             "Success: Product created successfully ",
             200,
             new ProductResource(
-                Product::with("images")->find($newProduct["id"])
+                Product::with(["images", "category.images"])->find($newProduct["id"])
             )
         );
     }
@@ -79,14 +83,15 @@ class ProductController
         $user = Auth::user();
         return $this->successResponse("user ", 200, $user);
     }
+
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
         //
-        return   $this->successResponse(
-            "Success: Products list ",
+        return $this->successResponse(
+            "Success: Products list",
             200,
             new ProductCollection(Product::with("images")->paginate())
         );
@@ -128,6 +133,7 @@ class ProductController
      */
     public function destroy(string $id)
     {
-        //
+        Product::destroy($id);
+        return $this->successResponse("Product deleted succssfylly", 200, null);
     }
 }

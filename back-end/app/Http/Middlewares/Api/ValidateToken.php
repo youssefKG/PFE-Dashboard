@@ -26,7 +26,7 @@ class ValidateToken
         if (!$request->session()->get("user_id")) {
             return   $this->successResponse(
                 "Authenfication fail ",
-                403,
+                401,
                 $sessionData
             );
         }

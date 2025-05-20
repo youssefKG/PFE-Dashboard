@@ -4,52 +4,22 @@ import Button from "../../components/common/button";
 import ProductCardsList from "../../components/containers/productCardsList";
 import { PlusCircleIcon } from "@heroicons/react/24/outline";
 import CreateProductBackDrop from "../../components/common/CreateProductBackDrop";
-import { useNotification } from "../../hooks/useContext";
-import { CreateProductI, ProductI } from "../../types/product";
 import ProductDetailBackdrop from "../../components/containers/productDetailBackdrop";
-import Response from "../../interfaces/response";
-import api from "../../api";
+import useProduct from "../../hooks/useProduct";
 
 const Products = () => {
-  const [isProductBackDropOpen, setIsProductBackDropOpen] =
-    useState<boolean>(false);
-  const [isLoading, setIsLoading] = useState<boolean>(true);
-  const [isProductDetailbBackdropOpen, setIsProductDetailBackdropOpen] =
-    useState<boolean>(true);
-  const { showNotification } = useNotification();
-
-  const createProduct = async (values: CreateProductI) => {
-    try {
-      setIsLoading(true);
-      const formData = new FormData();
-      formData.append("name", values.name);
-      formData.append("desciprion", values.description);
-      formData.append("regularPrice", values.regularPrice.toString());
-      formData.append("salePrice", values.salesPrice.toString());
-      formData.append("quantiy", values.quantity.toString());
-      formData.append("category_id", values.category_id);
-      values.images.map((img: File) => {
-        formData.append("images[]", img);
-      });
-
-      const response = await api.post<Response<ProductI>, FormData>(
-        "/products",
-        formData,
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        },
-      );
-
-      console.log(response);
-    } catch (error) {
-      showNotification("error", "Error in create new product");
-      console.log(error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
+  const [isProductBackDropOpen] = useState<boolean>(false);
+  const {
+    products,
+    productModal,
+    isLoading,
+    isCreateProductModalOpen,
+    closeCreateProductModal,
+    createProduct,
+    openProductDetailModal,
+    closeProductDetailModel,
+    openCreateProductModal,
+  } = useProduct();
 
   return (
     <div className="flex  flex-col gap-2 p-2  py-6 mb-16">
@@ -63,23 +33,25 @@ const Products = () => {
         <Button
           className="flex gap-2 self-end w-fit text-white text-xs justify-center
         items-center bg-black rounded-lg p-1 px-2 hover:opacity-85 transition-all"
-          handleClick={async () =>
-            setIsProductBackDropOpen(!isProductBackDropOpen)
-          }
+          handleClick={openCreateProductModal}
         >
           <PlusCircleIcon className="size-6 text-white" />
           <p>Create Product</p>
         </Button>
-        <ProductCardsList />
+        <ProductCardsList
+          productList={products}
+          openProductDetailModal={openProductDetailModal}
+        />
       </div>
       <CreateProductBackDrop
-        isOpen={isProductBackDropOpen}
-        handleClose={async () => setIsProductBackDropOpen(false)}
+        isOpen={isCreateProductModalOpen}
+        handleClose={closeCreateProductModal}
         createProduct={createProduct}
       />
       <ProductDetailBackdrop
-        isOpen={isProductDetailbBackdropOpen}
-        handleClose={() => setIsProductDetailBackdropOpen(false)}
+        isOpen={isCreateProductModalOpen}
+        handleClose={closeProductDetailModel}
+        product={productModal.product}
       />
     </div>
   );

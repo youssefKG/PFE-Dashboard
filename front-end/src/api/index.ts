@@ -25,6 +25,11 @@ class Api {
     const response = await instanceAxios.put<T>(endPoint, body);
     return response.data;
   }
+
+  public async delete<T>(endPoint: string): Promise<T> {
+    const response = await instanceAxios.delete<T>(endPoint);
+    return response.data;
+  }
 }
 
 const api = new Api();
