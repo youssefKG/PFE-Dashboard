@@ -4,12 +4,14 @@ import api from "../api";
 import { useNotification } from "./useContext";
 import { CategoryI, CreateCategoryFormDataType } from "../types/category";
 import { useScrollTrigger } from "@mui/material";
+import { useNavigate } from "react-router-dom";
 
 const useCategory = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [categoriesList, setCategoriesList] = useState<CategoryI[]>([]);
   const [isCreateModelOpen, setIsCreateModelOpen] = useState<boolean>(false);
   const [category, setCategory] = useState<CategoryI>({} as CategoryI);
+  const navigate = useNavigate();
 
   const { showNotification } = useNotification();
 
@@ -23,6 +25,10 @@ const useCategory = () => {
     } finally {
       setIsLoading(false);
     }
+  };
+
+  const navigateToCategoryDetail = (id: string) => {
+    navigate(`/category-detail/${id}`);
   };
 
   const createCategory = async (values: CreateCategoryFormDataType) => {
@@ -77,6 +83,7 @@ const useCategory = () => {
     closeCreateModel,
     isCreateModelOpen,
     getCategoryById,
+    navigateToCategoryDetail,
   };
 };
 

@@ -1,11 +1,12 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Api;
 
-use App\Traits\ApiResponse;
+use App\Http\Traits\Api\ApiResponse;
 
- class Controller
+class Controller
 {
+
     use ApiResponse;
     //
 }

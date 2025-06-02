@@ -24,7 +24,7 @@ const ProductCard: FC<IProductCardProps> = ({
   return (
     <button
       onClick={openProductDetailModal}
-      className="flex w-full transition-colors lg:max-w-xs   flex-col gap-3 p-3 border border-gray-100 dark:bg-gray-800 dark:text-white shadow-sm  rounded-md "
+      className="flex w-full transition-colors lg:max-w-xs   flex-col gap-3 p-3 border border-gray-100 bg-white dark:bg-gray-800 dark:text-white shadow-sm  rounded-md "
     >
       <div className="flex gap-4 ">
         <div className="flex gap-4">
@@ -41,7 +41,7 @@ const ProductCard: FC<IProductCardProps> = ({
             </p>
           </div>
         </div>
-        <ProductCardPopover />
+        <ProductCardPopover productId={productData.id} />
       </div>
       <div className="flex flex-col bg-gray-50 dark:bg-gray-900 border rounded-md">
         <div className="flex justify-between p-2 items-center">
@@ -67,11 +67,13 @@ const ProductCard: FC<IProductCardProps> = ({
 interface ProductCardPopoverPropsI {
   deleteProduct: () => Promise<void>;
   isProductDeletingLoading: boolean;
+  productId: string;
 }
 
 const ProductCardPopover: FC<ProductCardPopoverPropsI> = ({
   deleteProduct,
   isProductDeletingLoading,
+  productId,
 }) => {
   return (
     <Popover className="relative justify-self-end">
@@ -83,7 +85,7 @@ const ProductCardPopover: FC<ProductCardPopoverPropsI> = ({
       <PopoverPanel anchor="bottom" className="flex flex-col p-2">
         <div className="flex flex-col bg-white border w-full max-w-42 rounded-md">
           <Link
-            to=""
+            to={`/product-detail/${productId}`}
             className="flex items-center gap-2 p-2 px-2 hover:bg-gray-100 duration-300 ease-out"
           >
             <DocumentMagnifyingGlassIcon className="size-5 text-gray-700" />

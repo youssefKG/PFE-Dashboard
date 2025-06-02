@@ -4,7 +4,7 @@ import Button from "../../common/button";
 import { FC, useState } from "react";
 import { CategoryI, CreateCategoryFormDataType } from "../../../types/category";
 import { Form, Formik } from "formik";
-import { categoryValidation } from "../../../lib/Validator";
+import { createCategorySchema } from "../../../lib/Validator";
 import { useNotification } from "../../../hooks/useContext";
 import api from "../../../api";
 
@@ -61,7 +61,7 @@ const CreateCategoryBackDrop: FC<CreateCategoryBackDropPropsI> = ({
       <Backdrop className="items-center justify-center" open={isOpen}>
         <Formik
           initialValues={categoryInitialValues}
-          validationSchema={categoryValidation}
+          validationSchema={createCategorySchema}
           onSubmit={handleCreateCategory}
         >
           {({ values, errors, handleChange, handleBlur, touched }) => {

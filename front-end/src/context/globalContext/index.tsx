@@ -3,7 +3,6 @@ import AuthContextProvider from "../authContext";
 import NotificationContextProdvider from "../NotificationContext";
 
 type Mode = "ligth" | "dark";
-
 interface GlobalContextProviderPropsI {
   children: ReactNode;
 }

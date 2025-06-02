@@ -9,22 +9,22 @@ import {
 } from "../../components/ui/table";
 import { Badge } from "../..//components/ui/badge";
 import { format } from "date-fns";
-import { Avatar, AvatarFallback, AvatarImage } from "../../components/ui/avatar";
-import { Card, CardContent, CardHeader, CardTitle } from "../../components/ui/card";
 import {
-  DollarSign,
-  ShoppingCart,
-  Users,
-  Activity,
-} from "lucide-react";
+  Avatar,
+  AvatarFallback,
+  AvatarImage,
+} from "../../components/ui/avatar";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+} from "../../components/ui/card";
+import { DollarSign, ShoppingCart, Users, Activity } from "lucide-react";
 import Breadcrumb from "../../components/common/breadcrumbs";
-import StatCardsList from "../../components/common/statsCard";
 import SalesPerformance from "../../components/containers/SalesPerformance";
 import TopSellingProducts from "../../components/containers/TopSellingProducts";
-import RecentPurchases from "../../components/containers/recentPurchases";
-import DataTable from "../../components/containers/table/index";
-import RecentOrders from "../../components/containers/recentOrders";
-import data from "../../assets/dataTable.json";
+import DashboardStats from "@/components/containers/dashboardStats";
 
 interface Order {
   id: string;
@@ -40,7 +40,7 @@ interface Order {
     name: string;
     image: string;
   };
-  status: 'pending' | 'processing' | 'completed' | 'cancelled';
+  status: "pending" | "processing" | "completed" | "cancelled";
   totalAmount: number;
   createdAt: string;
 }
@@ -98,16 +98,16 @@ const Dashboard = () => {
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case 'pending':
-        return 'bg-yellow-100 text-yellow-800';
-      case 'processing':
-        return 'bg-blue-100 text-blue-800';
-      case 'completed':
-        return 'bg-green-100 text-green-800';
-      case 'cancelled':
-        return 'bg-red-100 text-red-800';
+      case "pending":
+        return "bg-yellow-100 text-yellow-800";
+      case "processing":
+        return "bg-blue-100 text-blue-800";
+      case "completed":
+        return "bg-green-100 text-green-800";
+      case "cancelled":
+        return "bg-red-100 text-red-800";
       default:
-        return 'bg-gray-100 text-gray-800';
+        return "bg-gray-100 text-gray-800";
     }
   };
 
@@ -119,12 +119,11 @@ const Dashboard = () => {
         </div>
         <Breadcrumb links={[{ value: "Dashboard", to: "/" }]} />
       </div>
-      <StatCardsList />
+      <DashboardStats />
       <div className="md:grid flex flex-col md:grid-cols-6 gap-4 p-2">
         <SalesPerformance />
         <TopSellingProducts />
       </div>
-
 
       <Card>
         <CardHeader>
@@ -172,13 +171,11 @@ const Dashboard = () => {
                     </div>
                   </TableCell>
                   <TableCell>
-                    <Badge variant={order.status as any}>
-                      {order.status}
-                    </Badge>
+                    <Badge variant={order.status as any}>{order.status}</Badge>
                   </TableCell>
                   <TableCell>${order.totalAmount.toFixed(2)}</TableCell>
                   <TableCell>
-                    {format(new Date(order.createdAt), 'MMM d, yyyy')}
+                    {format(new Date(order.createdAt), "MMM d, yyyy")}
                   </TableCell>
                 </TableRow>
               ))}

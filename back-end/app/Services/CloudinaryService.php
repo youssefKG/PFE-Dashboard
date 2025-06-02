@@ -26,12 +26,12 @@ class CloudinaryService implements StorageServiceI
     {
         // $result =     $this->uploadApi->upload($file->getRealPath(), $folder);
 
-$result = $this->uploadApi->upload($file->getRealPath());
+        $result = $this->uploadApi->upload($file->getRealPath());
 
         return $result;
     }
 
-    public function delete(string $public_id): void
+    public function delete(string $public_id, $folderName = "totib"): void
     {
         $this->uploadApi->destroy($public_id);
     }

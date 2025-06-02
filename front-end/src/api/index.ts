@@ -1,4 +1,4 @@
-import { AxiosRequestConfig } from "axios";
+import { Axios, AxiosRequestConfig } from "axios";
 import instanceAxios from "./axios.config";
 
 class Api {
@@ -21,8 +21,12 @@ class Api {
     }
   }
 
-  public async put<T, L>(endPoint: string, body: L): Promise<T> {
-    const response = await instanceAxios.put<T>(endPoint, body);
+  public async put<T, L>(
+    endPoint: string,
+    body: L,
+    config?: AxiosRequestConfig,
+  ): Promise<T> {
+    const response = await instanceAxios.put<T>(endPoint, body, config);
     return response.data;
   }
 
