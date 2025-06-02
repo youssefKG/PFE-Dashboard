@@ -10,7 +10,7 @@ import {
   ChevronDoubleRightIcon,
   ChevronDoubleLeftIcon,
 } from "@heroicons/react/24/outline";
-import { Divider, toggleButtonClasses } from "@mui/material";
+import { Divider } from "@mui/material";
 import "./index.css";
 
 const sidebarItems = [
@@ -28,9 +28,9 @@ const SiderBar = () => {
   };
   return (
     <div
-      className="z-30 transition-all hidden md:flex top-0 transition-colors h-screen
+      className="z-30 transition-all hidden md:flex top-0 h-screen
       border-r dark:bg-neutral-900 dark:text-white shadow-sm bg-white
-      sm:flex-col gap-16 col-start-1 col-end-2 p-2 max-w-xs "
+      sm:flex-col gap-16 col-start-1 col-end-2 p-4 max-w-sm "
     >
       <button onClick={toogleExpanded} className="self-end">
         {isExpanded ? (

@@ -32,7 +32,7 @@ const NotificationContextProdvider = ({
           position="top-center"
           draggable
           autoClose={3000}
-          theme="colored"
+          theme="light"
         />
       </div>
     </NotificationContext.Provider>

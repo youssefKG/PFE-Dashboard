@@ -12,6 +12,10 @@ import Category from "../pages/category";
 import ProductDetail from "../pages/productDetail";
 import Order from "../pages/orders";
 import Consumers from "../pages/consumers";
+import CreateCategory from "@/pages/createCategory";
+import CreateProduct from "@/pages/createProduct";
+import CategoryDetail from "@/pages/categoryDetail";
+
 const routes = createBrowserRouter([
   {
     path: "/",
@@ -29,9 +33,15 @@ const routes = createBrowserRouter([
               { path: "/products", Component: Products },
               { path: "/profil", Component: Profil },
               { path: "/category", Component: Category },
-              { path: "/product-detail", Component: ProductDetail },
+              { path: "/product-detail/:productId", Component: ProductDetail },
               { path: "/consumers", Component: Consumers },
               { path: "/orders", Component: Order },
+              { path: "/create-category", Component: CreateCategory },
+              { path: "/create-product", Component: CreateProduct },
+              {
+                path: "/category-detail/:categoryId",
+                Component: CategoryDetail,
+              },
             ],
           },
         ],

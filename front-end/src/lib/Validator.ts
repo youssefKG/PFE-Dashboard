@@ -39,9 +39,13 @@ export const createProductSchema = Yup.object({
     .min(3, "Product name must be at least 3 characters"),
 
   quantity: Yup.number()
-    .typeError("Regular price must be a number")
-    .required("Regular price is required")
-    .positive("Regular price must be positive"),
+    .typeError("Quantity  must be a number")
+    .required("Quantity is required")
+    .positive("Quantity be positive"),
+  description: Yup.string()
+    .typeError("Description must be a string")
+    .required("Descripion is required")
+    .min(5, "Product description must be at least 5 characters"),
 
   regularPrice: Yup.number()
     .typeError("Regular price must be a number")
@@ -56,9 +60,13 @@ export const createProductSchema = Yup.object({
       Yup.ref("regularPrice"),
       "Sales price must be less than or equal to regular price",
     ),
+
+  categoryId: Yup.string()
+    .typeError("Product description must be a string")
+    .required("Product category is required"),
 });
 
-export const categoryValidation = Yup.object({
+export const createCategorySchema = Yup.object().shape({
   name: Yup.string()
     .min(4, "Name must be at least 8 characters")
     .max(255, "Name must be less than 255 characters")
@@ -68,4 +76,18 @@ export const categoryValidation = Yup.object({
     .min(4, "Description must be at least 8 characters")
     .max(255, "Description must be less than 255 characters")
     .required("Description is required"),
+  image: Yup.mixed()
+    .required("Image is required")
+    .test("fileType", "Only image files are allowed", (value) => {
+      if (!value) return false;
+      return (
+        value &&
+        ["image/jpeg", "image/png", "image/jpg", "image/webp"].includes(
+          value.type,
+        )
+      );
+    })
+    .test("fileSize", "File is too large (max 5MB)", (value) => {
+      return value && value.size <= 5 * 1024 * 1024;
+    }),
 });

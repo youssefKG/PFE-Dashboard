@@ -31,7 +31,7 @@ class ProductResource extends JsonResource
                 "imgUrl" => (
                     new CategoryImagesResource(
                         $this->category?->images->first()
-                    ))->image_url,
+                    ))?->image_url ?? null,
 
             ]
         ];

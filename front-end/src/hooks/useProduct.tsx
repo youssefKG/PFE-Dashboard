@@ -1,8 +1,10 @@
-import { useEffect, useState } from "react";
+import { ChangeEvent, useEffect, useState } from "react";
 import { CreateProductI, ProductI } from "../types/product";
 import { useNotification } from "./useContext";
 import Response from "../interfaces/response";
 import api from "../api";
+import useDebounce from "./useDebounce";
+import { quartersToYears } from "date-fns";
 
 type ProductDetailModelStateType = {
   isOpen: boolean;
@@ -17,13 +19,21 @@ const useProduct = () => {
       product: null,
     },
   );
-
+  const [searchTerm, setSearchTerm] = useState<string>("");
+  const [pageIndex, setPageIndex] = useState<number>(0);
   const [isCreateProductModalOpen, setIsCreateProductModalVisible] =
     useState<boolean>(false);
   const [isProductDeletingLoading, setProductDeletingLoading] =
     useState<boolean>(false);
-
   const { showNotification } = useNotification();
+
+  const debouncedSearchItem = useDebounce(searchTerm, 400);
+
+  const [searchCategoryId, setSearchCategoryId] = useState<string | null>(null);
+
+  const handleChangeFilterCategory = (categoryId: string) => {
+    setSearchCategoryId(categoryId);
+  };
 
   // product model
   const openProductDetailModal = (product: ProductI) => {
@@ -43,9 +53,21 @@ const useProduct = () => {
   const fetchProducts = async () => {
     setIsLoading(true);
     try {
-      const response = await api.get<Response<ProductI[]>>("/products");
+      let query: string = "?search=";
+      if (debouncedSearchItem.length >= 3) {
+        query += `&name=${encodeURIComponent(debouncedSearchItem)}`;
+      }
+
+      if (searchCategoryId) {
+        query += `&category_id=${searchCategoryId}`;
+      }
+
+      const response = await api.get<Response<ProductI[]>>(
+        `/products/${query}`,
+      );
+
       setProducts(response.data);
-      console.log("product list", response.data);
+      console.log("product list", response);
     } catch (error) {
       console.log(error);
       showNotification("error", "Error: can't fetch products");
@@ -66,7 +88,7 @@ const useProduct = () => {
       formData.append("salesPrice", values.salesPrice.toString());
       formData.append("quantity", values.quantity.toString());
       formData.append("categoryId", values.categoryId);
-      values.images.map((img: File) => {
+      values.images.forEach((img: File) => {
         formData.append("images[]", img);
       });
 
@@ -88,24 +110,26 @@ const useProduct = () => {
     }
   };
 
-  const deleteProduct = async (id: string) => {
-    try {
-      setProductDeletingLoading(true);
-      await api.delete<Response<null>>(`/products/${id}`);
-      showNotification("success", "Succss: product deleted successfully");
-    } catch (_) {
-      showNotification("error", "Error: product deletion fail");
-    } finally {
-      setProductDeletingLoading(false);
-    }
+  const clearFitler = () => {
+    setSearchTerm("");
+    setSearchCategoryId(null);
+  };
+
+  const handleChange = async (event: ChangeEvent<HTMLInputElement>) => {
+    setSearchTerm(event.target.value);
+    console.log("searchTerm", searchTerm);
   };
 
   useEffect(() => {
-    console.log("page loaded");
+    fetchProducts();
+  }, [debouncedSearchItem, searchCategoryId]);
+
+  useEffect(() => {
     fetchProducts();
   }, []);
 
   return {
+    pageIndex,
     products,
     openProductDetailModal,
     closeProductDetailModel,
@@ -116,6 +140,10 @@ const useProduct = () => {
     openCreateProductModal,
     isCreateProductModalOpen,
     isProductDeletingLoading,
+    handleChange,
+    searchTerm,
+    handleChangeFilterCategory,
+    clearFitler,
   };
 };
 

@@ -15,12 +15,13 @@ class CategoryResource extends JsonResource
     public function toArray(Request $request): array
     {
         $images = $this->whenLoaded("images");
-        $firstImage =$images->first();
+        $firstImage = $images ? $images->first() : null;
+
         $result =  [
             "id" => $this->id,
             "name" => $this->name,
             "description" => $this->description,
-            "imageUrl" => $firstImage?->image_url
+            "imageUrl" => $firstImage?->image_url ?? null
         ];
         return $result;
     }
