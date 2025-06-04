@@ -11,10 +11,12 @@ import Profil from "../pages/profil";
 import Category from "../pages/category";
 import ProductDetail from "../pages/productDetail";
 import Order from "../pages/orders";
-import Consumers from "../pages/consumers";
 import CreateCategory from "@/pages/createCategory";
 import CreateProduct from "@/pages/createProduct";
 import CategoryDetail from "@/pages/categoryDetail";
+import Customers from "@/pages/customers";
+import CustomerDetail from "@/pages/customerDetail";
+import OrderDetail from "@/pages/orderDetail";
 
 const routes = createBrowserRouter([
   {
@@ -29,18 +31,53 @@ const routes = createBrowserRouter([
             path: "/",
             Component: DashboardLayout,
             children: [
-              { path: "/", Component: Dashboard },
-              { path: "/products", Component: Products },
-              { path: "/profil", Component: Profil },
-              { path: "/category", Component: Category },
-              { path: "/product-detail/:productId", Component: ProductDetail },
-              { path: "/consumers", Component: Consumers },
-              { path: "/orders", Component: Order },
-              { path: "/create-category", Component: CreateCategory },
-              { path: "/create-product", Component: CreateProduct },
+              {
+                path: "/",
+                Component: Dashboard,
+              },
+              {
+                path: "/products",
+                Component: Products,
+              },
+              {
+                path: "/profil",
+                Component: Profil,
+              },
+              {
+                path: "/category",
+                Component: Category,
+              },
+              {
+                path: "/product-detail/:productId",
+                Component: ProductDetail,
+              },
+              {
+                path: "/customers",
+                Component: Customers,
+              },
+              {
+                path: "/orders",
+                Component: Order,
+              },
+              {
+                path: "/create-category",
+                Component: CreateCategory,
+              },
+              {
+                path: "/create-product",
+                Component: CreateProduct,
+              },
+              {
+                path: "/customer-detail/:customerId",
+                Component: CustomerDetail,
+              },
               {
                 path: "/category-detail/:categoryId",
                 Component: CategoryDetail,
+              },
+              {
+                path: "/order-detail/:orderId",
+                Component: OrderDetail,
               },
             ],
           },

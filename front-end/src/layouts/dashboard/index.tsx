@@ -5,12 +5,12 @@ import DrawerPhone from "../../components/containers/Drawer";
 
 const DashboardLayout = () => {
   return (
-    <div className="flex flex-row h-screen relative">
+    <div className="flex flex-row h-screen overflow-hidden relative">
       <SiderBar />
       <DrawerPhone />
       <div
         className="w-full  transition-colors col-start-1  md:col-start-2
-      dark:bg-neutral-800 dark:text-white h-screen overflow-y-scroll
+      dark:bg-neutral-800  dark:text-white h-screen overflow-y-scroll
       bg-blue-50/40 flex flex-col gap-4"
       >
         <Navbar />

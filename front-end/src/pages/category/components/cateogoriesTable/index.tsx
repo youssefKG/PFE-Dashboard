@@ -32,29 +32,29 @@ const CategoriesTable: FC<CategoriesTablePropsI> = ({
         <Table>
           <TableCaption>A list of your recent invoices.</TableCaption>
           <TableHeader>
-            <TableRow className="font-bold cursor:pointer hover:opacity-80">
-              <TableHead className=" font-bold text-black">Invoice</TableHead>
-              <TableHead className="font-bold text-black">Status</TableHead>
-              <TableHead className="font-bold text-black">Method</TableHead>
-              <TableHead className="font-bold text-black self-end justify-self-end">
-                Number of products
-              </TableHead>
-            </TableRow>
+            <TableHead className=" font-bold text-black">name</TableHead>
+            <TableHead className="font-bold text-black">description</TableHead>
+            <TableHead className="font-bold text-black">
+              Product number
+            </TableHead>
           </TableHeader>
           <TableBody>
             {list.map((cat: CategoryI) => (
               <TableRow
                 onClick={() => navigateToCategoryDetail(cat.id)}
                 key={cat.id}
+                className="bg-gray-100"
               >
-                <TableCell className="font-medium">{cat.name}</TableCell>
                 <TableCell>
-                  <img className="size-12 rounded-md" src={cat.imageUrl} />
+                  <div className="flex items-center gap-2">
+                    <img src={cat.imageUrl} className="size-8 rounded-lg" />
+                    <p>{cat.name}</p>
+                  </div>
                 </TableCell>
                 <TableCell className="text-gray-400">
                   {cat.description}
                 </TableCell>
-                <TableCell className="text-right">300</TableCell>
+                <TableCell className="">300</TableCell>
               </TableRow>
             ))}
           </TableBody>
