@@ -24,9 +24,9 @@ const ProductCard: FC<IProductCardProps> = ({
   return (
     <button
       onClick={openProductDetailModal}
-      className="flex w-full transition-colors lg:max-w-xs   flex-col gap-3 p-3 border border-gray-100 bg-white dark:bg-gray-800 dark:text-white shadow-sm  rounded-md "
+      className="flex w-full transition-colors lg:max-w-xs flex-col gap-3 p-3 border border-gray-100 bg-white dark:bg-gray-800 dark:text-white shadow-sm  rounded-md "
     >
-      <div className="flex gap-4 ">
+      <div className="flex gap-4 w-full flex-1">
         <div className="flex gap-4">
           {productData.images.length > 0 && productData.images[0].imageUrl && (
             <img
@@ -41,7 +41,9 @@ const ProductCard: FC<IProductCardProps> = ({
             </p>
           </div>
         </div>
-        <ProductCardPopover productId={productData.id} />
+        <div className="flex-1 justify-end">
+          <ProductCardPopover productId={productData.id} />
+        </div>
       </div>
       <div className="flex flex-col bg-gray-50 dark:bg-gray-900 border rounded-md">
         <div className="flex justify-between p-2 items-center">
