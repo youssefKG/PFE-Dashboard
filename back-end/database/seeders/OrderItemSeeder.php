@@ -18,11 +18,11 @@ class OrderItemSeeder extends Seeder
             // Create 1-5 items for each order
             $numberOfItems = rand(1, 5);
             $totalAmount = 0;
-            
+
             for ($i = 0; $i < $numberOfItems; $i++) {
                 $product = $products->random();
                 $quantity = rand(1, 3);
-                $unitPrice = $product->price;
+                $unitPrice = $product->sales_price;
                 $subtotal = $unitPrice * $quantity;
                 $totalAmount += $subtotal;
 
@@ -39,4 +39,5 @@ class OrderItemSeeder extends Seeder
             $order->update(['total_amount' => $totalAmount]);
         }
     }
-} 
+}
+

@@ -1,30 +1,23 @@
-import { useEffect, useState } from "react";
+import { ChangeEvent, useEffect, useState } from "react";
 import Response from "../interfaces/response";
 import api from "../api";
 import { useNotification } from "./useContext";
 import { CategoryI, CreateCategoryFormDataType } from "../types/category";
-import { useScrollTrigger } from "@mui/material";
 import { useNavigate } from "react-router-dom";
+import useDebounce from "./useDebounce";
 
 const useCategory = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [categoriesList, setCategoriesList] = useState<CategoryI[]>([]);
   const [isCreateModelOpen, setIsCreateModelOpen] = useState<boolean>(false);
-  const [category, setCategory] = useState<CategoryI>({} as CategoryI);
+  const [searchTerm, setSearchTerm] = useState<string>("");
+  const debouncedSearchTerm = useDebounce<string>(searchTerm);
   const navigate = useNavigate();
 
   const { showNotification } = useNotification();
 
-  const fetchCategories = async () => {
-    try {
-      setIsLoading(true);
-      const response = await api.get<Response<CategoryI[]>>("/categories");
-      setCategoriesList(response.data);
-    } catch (error) {
-      console.log(error);
-    } finally {
-      setIsLoading(false);
-    }
+  const handleSearchTermChange = (event: ChangeEvent<HTMLInputElement>) => {
+    setSearchTerm(event.target.value);
   };
 
   const navigateToCategoryDetail = (id: string) => {
@@ -40,7 +33,7 @@ const useCategory = () => {
       formData.append("image", values.image);
 
       const response = await api.post<Response<CategoryI>, FormData>(
-        "/categories",
+        `/categories`,
         formData,
         {
           headers: {
@@ -71,6 +64,28 @@ const useCategory = () => {
     return response;
   };
 
+  const fetchCategories = async () => {
+    try {
+      let query = "?search=";
+      if (debouncedSearchTerm.length >= 3) {
+        query += `&cat_name=${encodeURIComponent(debouncedSearchTerm)}`;
+      }
+      setIsLoading(true);
+      const response = await api.get<Response<CategoryI[]>>(
+        `/categories${query}`,
+      );
+      setCategoriesList(response.data);
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    if (debouncedSearchTerm.length > 2) fetchCategories();
+  }, [debouncedSearchTerm]);
+
   useEffect(() => {
     fetchCategories();
   }, []);
@@ -84,6 +99,8 @@ const useCategory = () => {
     isCreateModelOpen,
     getCategoryById,
     navigateToCategoryDetail,
+    handleSearchTermChange,
+    searchTerm,
   };
 };
 

@@ -4,7 +4,9 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Api\Controller;
 use App\Http\Resources\CustomerOrdersCollection;
-use App\Http\Resources\CustomerOrdersCollections;
+use App\Http\Resources\OrderCollection;
+use App\Http\Resources\OrderDetailResource;
+use App\Http\Resources\OrderResource;
 use App\Models\Order;
 use App\Models\OrderItem;
 use App\Models\Product;
@@ -16,42 +18,39 @@ class OrderController extends Controller
 {
     public function index(Request $request)
     {
-        $query = Order::with(['client.user', 'items.product']);
+        $query = Order::with(['user', 'items'])->withCount("items");
 
-        // Search functionality
-        if ($request->has('search')) {
-            $search = $request->search;
-            $query->where(function ($q) use ($search) {
-                $q->where('order_number', 'like', "%{$search}%")
-                    ->orWhereHas('client.user', function ($q) use ($search) {
-                        $q->where('first_name', 'like', "%{$search}%")
-                            ->orWhere('last_name', 'like', "%{$search}%")
-                            ->orWhere('email', 'like', "%{$search}%");
-                    });
+
+        if ($request->has('pending')) {
+            $query->where('status', "pending");
+        }
+        if ($request->has("completed")) {
+            $query->orWhere("status", "completed");
+        }
+        if ($request->has("cancelled")) {
+            $query->orWhere("status", "cancelled");
+        }
+        if ($request->has("processing")) {
+            $query->orWhere("status", "processing");
+        }
+
+        if ($request->has("name")) {
+            $name = $request->query("name");
+            $query->whereHas("user", function ($q) use ($name) {
+                $q->where("first_name", "like", "%{$name}%")
+                    ->orWhere("last_name", "like", "%{$name}%")
+                    ->orWhere("email", "like", "%{$name}%");
             });
         }
-
-        // Filter by status
-        if ($request->has('status')) {
-            $query->where('status', $request->status);
-        }
-
         // Filter by date range
         if ($request->has('start_date') && $request->has('end_date')) {
             $query->whereBetween('created_at', [$request->start_date, $request->end_date]);
         }
 
-        // Sort functionality
-        $sortField = $request->sort_by ?? 'created_at';
-        $sortDirection = $request->sort_direction ?? 'desc';
-        $query->orderBy($sortField, $sortDirection);
-
-        $orders = $query->paginate($request->per_page ?? 10);
-
         return response()->json([
             'status' => 'success',
             'message' => 'Orders retrieved successfully',
-            'data' => $orders
+            'data' => new OrderCollection($query->get())
         ]);
     }
 
@@ -133,12 +132,12 @@ class OrderController extends Controller
 
     public function show($id)
     {
-        $order = Order::with(['client.user', 'items.product'])->findOrFail($id);
+        $order = Order::with(['user', 'items.product.images'])->findOrFail($id);
 
         return response()->json([
             'status' => 'success',
             'message' => 'Order retrieved successfully',
-            'data' => $order
+            'data' => new OrderDetailResource($order)
         ]);
     }
 
@@ -238,12 +237,12 @@ class OrderController extends Controller
             'status' => 'success',
             'message' => 'Order statistics retrieved successfully',
             'data' => [
-                'total_orders' => $totalOrders,
-                'total_revenue' => $totalRevenue,
-                'pending_orders' => $pendingOrders,
-                'completed_orders' => $completedOrders,
-                'orders_this_month' => $ordersThisMonth,
-                'revenue_this_month' => $revenueThisMonth
+                'totalOrders' => $totalOrders,
+                'totalRevenue' => $totalRevenue,
+                'pendingOrders' => $pendingOrders,
+                'completedOrders' => $completedOrders,
+                'ordersThisMonth' => $ordersThisMonth,
+                'revenueThisMonth' => $revenueThisMonth
             ]
         ]);
     }
@@ -260,4 +259,3 @@ class OrderController extends Controller
         );
     }
 }
-

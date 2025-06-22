@@ -124,65 +124,6 @@ const Dashboard = () => {
         <SalesPerformance />
         <TopSellingProducts />
       </div>
-
-      <Card>
-        <CardHeader>
-          <CardTitle>Recent Orders</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Order</TableHead>
-                <TableHead>Client</TableHead>
-                <TableHead>Product</TableHead>
-                <TableHead>Status</TableHead>
-                <TableHead>Total</TableHead>
-                <TableHead>Date</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {orders.map((order) => (
-                <TableRow key={order.id}>
-                  <TableCell className="font-medium">
-                    #{order.orderNumber}
-                  </TableCell>
-                  <TableCell>
-                    <div className="flex items-center gap-2">
-                      <Avatar className="h-8 w-8">
-                        <AvatarImage src={order.client.avatar} />
-                        <AvatarFallback>
-                          {order.client.firstName[0]}
-                          {order.client.lastName[0]}
-                        </AvatarFallback>
-                      </Avatar>
-                      <span>
-                        {order.client.firstName} {order.client.lastName}
-                      </span>
-                    </div>
-                  </TableCell>
-                  <TableCell>
-                    <div className="flex items-center gap-2">
-                      <Avatar className="h-8 w-8">
-                        <AvatarImage src={order.product.image} />
-                        <AvatarFallback>{order.product.name[0]}</AvatarFallback>
-                      </Avatar>
-                      <span>{order.product.name}</span>
-                    </div>
-                  </TableCell>
-                  <TableCell>
-                    <Badge variant={order.status as any}>{order.status}</Badge>
-                  </TableCell>
-                  <TableCell>${order.totalAmount.toFixed(2)}</TableCell>
-                  <TableCell>
-                    {format(new Date(order.createdAt), "MMM d, yyyy")}
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </CardContent>
-      </Card>
     </div>
   );
 };

@@ -173,7 +173,8 @@ class CustomerController
 
         return $this->successResponse(
             'User deleted successfully',
-            200
+            200,
+null,
         );
     }
 

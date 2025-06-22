@@ -7,8 +7,8 @@ import { useAuthContext } from "../../hooks/useContext";
 import Button from "../../components/common/button";
 
 const InitialLoginFormData: LoginFormDataType = {
-  email: "yousseftaoussi@gmail.com",
-  password: "Password123",
+  email: "admin@example.com",
+  password: "password123",
 };
 
 const Login = () => {

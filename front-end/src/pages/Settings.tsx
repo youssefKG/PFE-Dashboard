@@ -1,16 +1,16 @@
-import React, { useState } from 'react';
-import { useAuth } from '../context/AuthContext';
-import api from '../api/axios.config';
+import React, { useState } from "react";
+import { useAuth } from "../context/AuthContext";
+import api from "../api/axios.config";
 
 const Settings: React.FC = () => {
   const { user } = useAuth();
   const [formData, setFormData] = useState({
-    email: user?.email || '',
-    firstName: user?.first_name || '',
-    lastName: user?.last_name || '',
-    currentPassword: '',
-    newPassword: '',
-    confirmPassword: '',
+    email: user?.email || "",
+    firstName: user?.first_name || "",
+    lastName: user?.last_name || "",
+    currentPassword: "",
+    newPassword: "",
+    confirmPassword: "",
   });
   const [notifications, setNotifications] = useState({
     email: true,
@@ -18,8 +18,8 @@ const Settings: React.FC = () => {
     marketing: false,
   });
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
-  const [success, setSuccess] = useState('');
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -34,12 +34,12 @@ const Settings: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    setError('');
-    setSuccess('');
+    setError("");
+    setSuccess("");
 
     try {
       // Update profile
-      await api.put('/users/profile', {
+      await api.put("/users/profile", {
         email: formData.email,
         first_name: formData.firstName,
         last_name: formData.lastName,
@@ -48,17 +48,17 @@ const Settings: React.FC = () => {
       // Update password if provided
       if (formData.newPassword) {
         if (formData.newPassword !== formData.confirmPassword) {
-          throw new Error('New passwords do not match');
+          throw new Error("New passwords do not match");
         }
-        await api.put('/users/password', {
+        await api.put("/users/password", {
           current_password: formData.currentPassword,
           new_password: formData.newPassword,
         });
       }
 
-      setSuccess('Settings updated successfully');
+      setSuccess("Settings updated successfully");
     } catch (err: any) {
-      setError(err.response?.data?.message || 'Failed to update settings');
+      setError(err.response?.data?.message || "Failed to update settings");
     } finally {
       setLoading(false);
     }
@@ -258,7 +258,7 @@ const Settings: React.FC = () => {
             disabled={loading}
             className="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
           >
-            {loading ? 'Saving...' : 'Save Changes'}
+            {loading ? "Saving..." : "Save Changes"}
           </button>
         </div>
       </form>
@@ -266,4 +266,5 @@ const Settings: React.FC = () => {
   );
 };
 
-export default Settings; 
+export default Settings;
+

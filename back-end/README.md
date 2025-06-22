@@ -59,3 +59,74 @@ If you discover a security vulnerability within Laravel, please send an e-mail t
 ## License
 
 The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+
+# Back-end Structure
+
+```
+back-end/
+├── app/
+│   ├── Console/
+│   ├── Exceptions/
+│   ├── Http/
+│   │   ├── Controllers/
+│   │   │   ├── Auth/
+│   │   │   ├── Admin/
+│   │   │   └── User/
+│   │   ├── Middleware/
+│   │   ├── Requests/
+│   │   └── Resources/
+│   ├── Models/
+│   ├── Services/
+│   ├── Repositories/
+│   └── Helpers/
+├── bootstrap/
+├── config/
+├── database/
+│   ├── factories/
+│   ├── migrations/
+│   └── seeders/
+├── public/
+├── resources/
+│   ├── lang/
+│   └── views/
+├── routes/
+│   ├── api.php
+│   ├── channels.php
+│   ├── console.php
+│   └── web.php
+├── storage/
+├── tests/
+│   ├── Feature/
+│   └── Unit/
+└── vendor/
+```
+
+## Directory Descriptions
+
+### app/
+- **Console/**: Custom Artisan commands
+- **Exceptions/**: Custom exception handlers
+- **Http/**: 
+  - **Controllers/**: All application controllers
+  - **Middleware/**: Custom middleware
+  - **Requests/**: Form request validation classes
+  - **Resources/**: API resources and collections
+- **Models/**: Eloquent models
+- **Services/**: Business logic services
+- **Repositories/**: Data access layer
+- **Helpers/**: Helper functions and utilities
+
+### database/
+- **factories/**: Model factories for testing
+- **migrations/**: Database migrations
+- **seeders/**: Database seeders
+
+### routes/
+- **api.php**: API routes
+- **web.php**: Web routes
+- **channels.php**: Broadcasting channels
+- **console.php**: Console commands
+
+### tests/
+- **Feature/**: Feature tests
+- **Unit/**: Unit tests

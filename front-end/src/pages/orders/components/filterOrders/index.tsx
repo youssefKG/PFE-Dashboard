@@ -1,3 +1,4 @@
+import { ChangeEvent, FC } from "react";
 import { Input } from "@/components/ui/input";
 import {
   Popover,
@@ -7,13 +8,35 @@ import {
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
-import { LucideArrowBigLeft } from "lucide-react";
+import { Status } from "@/types/orders.type";
+import { stat } from "fs";
 
-const FilterOrders = () => {
+interface FilterOrdersPropsI {
+  searchTerm: string;
+  handleSearchTermChange: (event: ChangeEvent<HTMLInputElement>) => void;
+  handleStatusFilterChange: (option: Status, checked: boolean) => void;
+  statusFilter: Status[];
+}
+
+const statusFilterData: Status[] = [
+  "pending",
+  "cancelled",
+  "completed",
+  "processing",
+];
+
+const FilterOrders: FC<FilterOrdersPropsI> = ({
+  searchTerm,
+  handleSearchTermChange,
+  handleStatusFilterChange,
+  statusFilter,
+}) => {
   return (
     <div className="flex justify-between flex-wrap">
       <Input
+        value={searchTerm}
         className="max-w-2xl"
+        onChange={handleSearchTermChange}
         placeholder="Search for orders by customer name or email"
       />
       <Popover>
@@ -22,22 +45,18 @@ const FilterOrders = () => {
         </PopoverTrigger>
         <PopoverContent className="w-60">
           <div className="flex flex-col gap-2">
-            <div className="flex gap-2">
-              <Checkbox name="pending" />
-              <Label>Pending</Label>
-            </div>
-            <div className="flex gap-2">
-              <Checkbox name="pending" />
-              <Label>Progress</Label>
-            </div>
-            <div className="flex gap-2">
-              <Checkbox name="pending" />
-              <Label>Canceled</Label>
-            </div>
-            <div className="flex gap-2">
-              <Checkbox value="pending" name="pending" />
-              <Label>Progress</Label>
-            </div>
+            {statusFilterData.map((status: Status) => (
+              <div className="flex gap-2">
+                <Checkbox
+                  name={status}
+                  checked={statusFilter.includes(status)}
+                  onCheckedChange={(checked: boolean) =>
+                    handleStatusFilterChange(status, checked)
+                  }
+                />
+                <Label>{status}</Label>
+              </div>
+            ))}
           </div>
         </PopoverContent>
       </Popover>

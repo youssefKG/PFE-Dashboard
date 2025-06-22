@@ -70,9 +70,11 @@ const AuthContextProvider = ({ children }: AuthContextProviderPropsI) => {
 
   const logout = async () => {
     try {
+      console.log("logout");
       setIsLoading(true);
       await api.get<Response<null>>("/auth/logout");
-      setUser({} as UserType);
+      setUser(null);
+      navigate("/login");
     } catch (error) {
       console.log(error);
     } finally {
@@ -82,7 +84,6 @@ const AuthContextProvider = ({ children }: AuthContextProviderPropsI) => {
 
   useEffect(() => {
     const user = LocalStorageService.getItem("totib_user");
-    console.log("local", user);
     if (user) {
       setUser(user);
     } else {

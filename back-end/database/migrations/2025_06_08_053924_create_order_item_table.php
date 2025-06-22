@@ -10,11 +10,11 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('order_items', function (Blueprint $table) {
-            $table->uuid("id")->default(Str::uuid());
+            $table->uuid()->default(Str::uuid());
             $table->uuid('order_id');
             $table->uuid('product_id');
             $table->integer('quantity');
-            $table->decimal('unit_price', 10, 2);
+            $table->decimal('unit_pirce', 10, 2);
             $table->decimal('subtotal', 10, 2);
             $table->timestamps();
             $table

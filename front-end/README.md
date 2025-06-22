@@ -48,3 +48,126 @@ export default tseslint.config({
   },
 })
 ```
+
+# E-commerce Front-end Structure
+
+```
+front-end/
+├── src/
+│   ├── api/                    # API configuration
+│   │   ├── axios.ts           # Axios instance
+│   │   └── endpoints.ts       # API endpoints
+│   │
+│   ├── components/            # Reusable components
+│   │   ├── common/           # Shared components
+│   │   │   ├── Button/
+│   │   │   ├── Input/
+│   │   │   ├── Card/
+│   │   │   └── Table/
+│   │   │
+│   │   ├── layout/           # Layout components
+│   │   │   ├── Header/
+│   │   │   ├── Footer/
+│   │   │   └── Sidebar/
+│   │   │
+│   │   └── features/         # Feature components
+│   │       ├── auth/
+│   │       ├── products/
+│   │       ├── categories/
+│   │       └── cart/
+│   │
+│   ├── pages/                # Page components
+│   │   ├── auth/            # Auth pages
+│   │   │   ├── Login.tsx
+│   │   │   ├── Register.tsx
+│   │   │   └── ForgotPassword.tsx
+│   │   │
+│   │   ├── shop/            # Shop pages
+│   │   │   ├── Home.tsx
+│   │   │   ├── Products.tsx
+│   │   │   ├── ProductDetails.tsx
+│   │   │   ├── Categories.tsx
+│   │   │   └── Cart.tsx
+│   │   │
+│   │   └── admin/           # Admin pages
+│   │       ├── Dashboard.tsx
+│   │       ├── Products.tsx
+│   │       ├── Categories.tsx
+│   │       └── Orders.tsx
+│   │
+│   ├── services/            # API services
+│   │   ├── auth.service.ts
+│   │   ├── product.service.ts
+│   │   ├── category.service.ts
+│   │   └── order.service.ts
+│   │
+│   ├── types/               # TypeScript types
+│   │   ├── auth.types.ts
+│   │   ├── product.types.ts
+│   │   ├── category.types.ts
+│   │   └── order.types.ts
+│   │
+│   ├── utils/               # Utility functions
+│   │   ├── helpers.ts
+│   │   └── validation.ts
+│   │
+│   ├── App.tsx             # Root component
+│   └── main.tsx            # Entry point
+│
+├── public/                 # Static files
+├── .env                    # Environment variables
+├── index.html             # HTML template
+├── package.json           # Dependencies
+├── tsconfig.json          # TypeScript configuration
+└── vite.config.ts         # Vite configuration
+```
+
+## Features
+
+### 1. Authentication
+- Login
+- Register
+- Forgot Password
+
+### 2. Shop
+- Product browsing
+- Category filtering
+- Shopping cart
+- Order management
+
+### 3. Admin
+- Product management
+- Category management
+- Order management
+- User management
+
+## Key Components
+
+### Common Components
+- Button
+- Input
+- Card
+- Table
+
+### Layout Components
+- Header
+- Footer
+- Sidebar
+
+### Feature Components
+- Auth forms
+- Product cards
+- Category lists
+- Cart items
+
+## Services
+- Auth service
+- Product service
+- Category service
+- Order service
+
+## Types
+- Auth types
+- Product types
+- Category types
+- Order types

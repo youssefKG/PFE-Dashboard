@@ -43,30 +43,12 @@ const routes = createBrowserRouter([
                 path: "/profil",
                 Component: Profil,
               },
-              {
-                path: "/category",
-                Component: Category,
-              },
-              {
-                path: "/product-detail/:productId",
-                Component: ProductDetail,
-              },
-              {
-                path: "/customers",
-                Component: Customers,
-              },
-              {
-                path: "/orders",
-                Component: Order,
-              },
-              {
-                path: "/create-category",
-                Component: CreateCategory,
-              },
-              {
-                path: "/create-product",
-                Component: CreateProduct,
-              },
+              { path: "/category", Component: Category },
+              { path: "/product-detail/:productId", Component: ProductDetail },
+              { path: "/customers", Component: Customers },
+              { path: "/orders", Component: Order },
+              { path: "/create-category", Component: CreateCategory },
+              { path: "/create-product", Component: CreateProduct },
               {
                 path: "/customer-detail/:customerId",
                 Component: CustomerDetail,
@@ -75,10 +57,7 @@ const routes = createBrowserRouter([
                 path: "/category-detail/:categoryId",
                 Component: CategoryDetail,
               },
-              {
-                path: "/order-detail/:orderId",
-                Component: OrderDetail,
-              },
+              { path: "/order-detail/:orderId", Component: OrderDetail },
             ],
           },
         ],

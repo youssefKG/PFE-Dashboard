@@ -6,7 +6,13 @@ import { CategoriesTable } from "./components";
 import { Link } from "react-router-dom";
 
 const Category = () => {
-  const { categoriesList, isLoading, navigateToCategoryDetail } = useCategory();
+  const {
+    categoriesList,
+    isLoading,
+    navigateToCategoryDetail,
+    searchTerm,
+    handleSearchTermChange,
+  } = useCategory();
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -19,7 +25,10 @@ const Category = () => {
               <Breadcrumb links={[{ value: "Categories", to: "/category" }]} />
             </div>
           </div>
-          <FilterCategory />
+          <FilterCategory
+            searchTerm={searchTerm}
+            handleSearchTermChange={handleSearchTermChange}
+          />
         </div>
         <Link
           to="/create-category"

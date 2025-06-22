@@ -76,11 +76,11 @@ class CategoryController extends Controller
 
     public function index(Request $request)
     {
-        $query = Category::with(['images', 'parent', 'children']);
+        $query = Category::with(['images', 'parent', 'children'])->withCount(["products"]);
 
         // Search by name
-        if ($request->has('search')) {
-            $query->where('name', 'like', '%' . $request->search . '%');
+        if ($request->has('cat_name')) {
+            $query->where('name', 'like', '%' . $request->cat_name . '%');
         }
 
         // Filter by status
@@ -93,6 +93,9 @@ class CategoryController extends Controller
             $query->where('parent_id', $request->parent_id);
         }
 
+        $query->withCount(["products"]);
+
+
         // Sort by
         $sortField = $request->get('sort_by', 'name');
         $sortDirection = $request->get('sort_direction', 'asc');
@@ -101,9 +104,11 @@ class CategoryController extends Controller
         return new CategoryCollection($query->paginate($request->get('per_page', 10)));
     }
 
-    public function show(string $id)
+    public function show(Request $request, string $id)
     {
-        $category = Category::with(['images', 'parent', 'children', 'products'])->findOrFail($id);
+        $category = Category::with(
+            ['images', 'parent', 'children', 'products']
+        )->findOrFail($id);
         return new CategoryResource($category);
     }
 
